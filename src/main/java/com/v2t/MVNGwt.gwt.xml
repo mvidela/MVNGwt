@@ -9,6 +9,11 @@
   <inherits name='com.google.gwt.user.theme.standard.Standard'/>
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
+  
+  
+  <!-- Google Gin dependency injection -->
+  <inherits name="com.google.gwt.inject.Inject"/>
+  
 
   <!-- Other module inherits                                      -->
 

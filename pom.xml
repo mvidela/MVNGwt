@@ -39,6 +39,15 @@
 	      <version>4.4</version>
 	      <scope>test</scope>
 	    </dependency>
+	    
+	    <!--  Google Gin dependency injection -->
+	    <dependency>
+    		<groupId>com.googlecode.gwt.inject</groupId>
+    		<artifactId>gin</artifactId>
+    		<version>1.0</version>
+		</dependency>
+	    
+	    
   </dependencies>
 
   <build>

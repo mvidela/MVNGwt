@@ -1,21 +1,20 @@
 package com.v2t.client;
 
-import com.v2t.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.v2t.client.injector.ApplicationInjector;
+import com.v2t.shared.FieldVerifier;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -29,16 +28,15 @@ public class ApplicationEntryPoint implements EntryPoint {
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";
 
-	/**
-	 * Create a remote service proxy to talk to the server-side Greeting service.
-	 */
-	private final GreetingServiceAsync greetingService = GWT
-			.create(GreetingService.class);
+	private final ApplicationInjector injector = GWT.create(ApplicationInjector.class);
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		
+		final ServerDispatchAsync dispatcher = injector.getServerDispatch();
+		
 		final Button sendButton = new Button("Send");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
@@ -77,8 +75,8 @@ public class ApplicationEntryPoint implements EntryPoint {
 		dialogBox.setWidget(dialogVPanel);
 
 		// Add a handler to close the DialogBox
-		closeButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
+		closeButton.addClickListener(new ClickListener() {
+			public void onClick(Widget arg0) {
 				dialogBox.hide();
 				sendButton.setEnabled(true);
 				sendButton.setFocus(true);
@@ -86,21 +84,12 @@ public class ApplicationEntryPoint implements EntryPoint {
 		});
 
 		// Create a handler for the sendButton and nameField
-		class MyHandler implements ClickHandler, KeyUpHandler {
+		class MyHandler implements ClickListener, KeyboardListener{
 			/**
 			 * Fired when the user clicks on the sendButton.
 			 */
-			public void onClick(ClickEvent event) {
+			public void onClick(Widget arg0) {
 				sendNameToServer();
-			}
-
-			/**
-			 * Fired when the user types in the nameField.
-			 */
-			public void onKeyUp(KeyUpEvent event) {
-				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					sendNameToServer();
-				}
 			}
 
 			/**
@@ -119,7 +108,7 @@ public class ApplicationEntryPoint implements EntryPoint {
 				sendButton.setEnabled(false);
 				textToServerLabel.setText(textToServer);
 				serverResponseLabel.setText("");
-				greetingService.greetServer(textToServer,
+				dispatcher.greetServer(textToServer,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
 								// Show the RPC error message to the user
@@ -142,11 +131,27 @@ public class ApplicationEntryPoint implements EntryPoint {
 							}
 						});
 			}
+
+			public void onKeyDown(Widget arg0, char arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void onKeyPress(Widget arg0, char arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void onKeyUp(Widget arg0, char arg1, int arg2) {
+				/*if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+					sendNameToServer();
+				}*/
+			}
 		}
 
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();
-		sendButton.addClickHandler(handler);
-		nameField.addKeyUpHandler(handler);
+		sendButton.addClickListener(handler);
+		nameField.addKeyboardListener( handler );
 	}
 }

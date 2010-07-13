@@ -1,15 +1,15 @@
 package com.v2t.server;
 
-import com.v2t.client.GreetingService;
-import com.v2t.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.v2t.client.ServerDispatch;
+import com.v2t.shared.FieldVerifier;
 
 /**
  * The server side implementation of the RPC service.
  */
 @SuppressWarnings("serial")
-public class GreetingServiceImpl extends RemoteServiceServlet implements
-		GreetingService {
+public class ServerDispatchImpl extends RemoteServiceServlet implements
+		ServerDispatch {
 
 	public String greetServer(String input) throws IllegalArgumentException {
 		// Verify that the input is valid. 
